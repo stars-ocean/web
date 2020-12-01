@@ -8,7 +8,6 @@
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     if (document.getElementById(elmnt.id + "titlebar")) {
       /* if present, the header is where you move the DIV from:*/
-      alert ('hello');
       document.getElementById(elmnt.id + "titlebar").onmousedown = dragMouseDown;
     } else {
       /* otherwise, move the DIV from anywhere inside the DIV:*/
@@ -175,7 +174,6 @@ a:hover {
 
 
 #titlebar{
-  opacity: 1.0;
   z-index: 10;
   cursor: grab;
   background-image: linear-gradient(#e5e4e5, #cecece);
@@ -183,6 +181,8 @@ a:hover {
   min-width: 600px;
   height: 22px;
   border-radius: 0px;
+  opacity: 1.0;
+  /* z-index: 1; */
 }
 
 
@@ -228,14 +228,14 @@ bottom: 0px;
 <div class='container'>
 <div id='frame'>
 
-  <div id='titlebar'>
-    <div class = 'circle1'>
-        <div class = 'circle2'>
-         <div class = 'circle3'>
-         </div>
-        </div>
-    </div>
+<div id='titlebar'>
+  <div class = 'circle1'>
+      <div class = 'circle2'>
+       <div class = 'circle3'>
+       </div>
+      </div>
   </div>
+</div>
 
 
 <div id= 'time' style="color:#669900"> </div>
@@ -257,7 +257,7 @@ This site (v0.1) is created to share some of my  thoughts / code snippets that a
 
 <!-- ======starts here======= -->
 <div class = 'article'>
-  <a href="cpu-hpc-pytorch/">Leverage parallel performance for CPU based PyTorch inference</a>
+  <a href="cpu-hpc-pytorch/">Leverage parallel performance for CPU based PyTorch inference.</a>
 </div>
 
 </div>
