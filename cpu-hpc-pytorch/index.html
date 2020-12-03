@@ -174,17 +174,17 @@
 <h4><a name='bg'>Some backgrounds</a></h4>
 
 <p>
-Although GPU is already the main computational power for deep learning tasks, for big data oriented scientific applications, the availability of the industrial grade GPU cards (e.g. Nvidia P100/V100) in most of the high performance computing centers (such as LRZ: Leibniz-Rechenzentrum) is still far lower than the typical CPU based computational nodes. Last year I had to translate my GPU basd Pytorch inference code into CPU based, the target machine is the LRZ's SuperMUC-NG thin node with 48 physical cores and 96 GB ram, as this type of node is the most common one in LRZ.
+Recently I've been informed by a colleague in a big project that one of my deep learning implementations for HPC has been requested and used to help a computing center (LRZ: Leibniz-Rechenzentrum) to evaluate / benchmark their next generation computating nodes (SuperMUC-NG phase 2). So I guess it worth to share this method, here are some backgrounds: although GPU is already the main computational power for deep learning tasks, for big data oriented scientific applications, the availability of the industrial grade GPU cards (e.g. Nvidia P100/V100) in most of the high performance computing centers (such as LRZ or JSC Jülich Supercomputing Centre) is still far lower than the typical CPU based computational nodes. Last year I had to translate my GPU basd Pytorch inference code into CPU based, the target machine is the LRZ's SuperMUC-NG thin node with 48 physical cores and 96 GB ram, as this type of node is the most common type in LRZ.
 </p>
 
 
 <p>
-	However a troubling issue is the low efficiency of the CPU version, I expect ~ 50% percent speed drop on a high-end 48 cores node compared with a V100, but it runs far slower than that. More specificailly: adding more CPUs to get involved in the computation wouldn't help much, put all 48 CPUs into computation would only get you ~ 8 - 10 times faster, and the PyTorch is indeed CPU built, via <code>htop</code> you can see that all CPUs are indeed in computation. I also talked to engineer from Intel (refeered by LRZ colleagues), from where I get few advises, mainly in launching job in fixing CPU affinity way and setting the NUMA (non-unified memory access) for the job, I carried out the experiments, the results are not particularly promising, none of the methods got me more than 5% of the performance increment. I guess they are both from the operating system level, and this problem would need a code level effort. I grabed a picture from PyTorch official docs <a href="https://pytorch.org/docs/stable/notes/cpu_threading_torchscript_inference.html?highlight=cpu%20threading">here</a>
+ A troubling issue is the low efficiency of the CPU version, I expect ~ 50% percent speed drop on a high-end 48 cores node compared with a Nvidia V100, but it runs far slower than that. More specificailly: adding more CPUs to get involved in the computation wouldn't help much, put all 48 CPUs into computation would only get you ~ 4 - 8 speed up (depends on CNN architecture), via <code>htop</code> you can see that all CPUs are indeed in computation, the saturation effect is too early. I carried out the experiments at system level: launching job in fixing CPU affinity way and setting the NUMA (non-uniform memory access), the results are not particularly promising, none of the methods got me more than 5% of the performance increment. I thought about this, one possible reason could be that affinity / NUMA will facilitate the performance for simple computation, but for the massive matrix manipulation, they probably will not be able to contribute that much. I grabed a picture from PyTorch official docs <a href="https://pytorch.org/docs/stable/notes/cpu_threading_torchscript_inference.html?highlight=cpu%20threading">here</a>
 , which seems to be a common issue. </p>
 	<img src="https://pytorch.org/docs/stable/_images/cpu_threading_runtimes.svg" width="600">
 
 <p>
-	In this page I'd like to share a lower-level method for solving this issue. Please note it is aiming at improving the performance for multi-cores parallelization in a shared memory system, instead of the single-core, as single-core performance is a rather well solved issue (e.g. MKL-DNN, C++ based solution). If you are experiencing the same issue while working on inferencing very high resolution images (e.g. satellite observations) with PyTorch CPU version, this should help you.
+	In this page I'd like to share the code level method for solving this issue. Please note it is aiming at improving the performance for multi-cores parallelization in a shared memory system, instead of the single-core, as single-core performance is a rather well solved issue (e.g. MKL-DNN, C++ based solution). If you are experiencing the same issue while working on inferencing very high resolution images (e.g. satellite observations) with PyTorch CPU version, this should help you.
 </p>
 
 
@@ -262,37 +262,36 @@ So back to our topic, what exactly happened when we run it on the target machine
 
 <img src="img/htop.png" width="400">
 <div class='cap'>
-You might wonder why another half of the slots are in sleep, it is because another half are actually the hyper threadings, e.g. CPU[28] and CPU[76] are the same physical entity. Running one process on one physical core is exactly what we need, so that the CPU running time is 100% concentrated on 1 task (for security reason, I masked the host info).
+You might wonder why another half of the slots are in sleep, it is because another half are actually the hyper threadings, e.g.  CPU[76] is the hyper threading of CPU[28]. Running one process on one physical core is exactly what we need, so that the CPU running time is 100% concentrated on 1 task. And it seems the task can actually go around, however it only switch within the same physical core (for security reason, I masked the host info).
 </div>
 
 
 <p>
-Here I would like to introduce some computational parts, so from the input data, I extracted ~ 4E6 patches and interpolate them to 224 x 224 pixels, then I use the Resnet18 (with customized FC class number) to inference these patches in MKL-DNN domain and measure the running time to evaluate the performance. I also measured if I do nothing but purely rely on the default solution by using <code>torch.set_num_threads(nCPU)</code>. Apart from utilizing all CPUs, I also tested with different number of CPUs, the full benchmark can be seen below.
+Before revealing the final result,  I would like to introduce some computational parts, so from the input data, I extracted ~ 4E6 patches and interpolate them to 224 x 224 pixels, then I use the Resnet18 (with customized FC class number) to inference these patches in MKL-DNN domain and measure the running time to evaluate the performance for different number of CPUs. The same method also has been applied to the default OpenMP based solution. The full benchmark can be seen below.
 </p>
 
 
 <img src="img/cpu-benchmark.png" width="400">
 <p>
-The result is promising! This method gained us significant performance boosts over the default OpenMP solution.
+Isn't the result amazing! The saturation effects sarted with 16 CPUs for the default OpenMP solution, eventually there is only ~ 4 x speed up compared with single CPU, meaning you basically waste a tremendous amount of computational resources if you simply specify <code>torch.set_thread_num(nCPU)</code>. However for the proposed menthod, you get nearly linear speed up, the highest performance is ~ 10 x faster than the default solution. Our design and implementation worked !
 </p>
 
 <p>
- Just in case you are interested, the sicientific result of this computation is the classification map using Resnet18, a remote area near Tokyo.
+ Just in case you are interested, the sicientific result of this computation is the classification map for a remote area near Tokyo.
 </p>
 
 <img src="img/tk_demo.png" width="350">
 
 <h4><a name='th'>Some thoughts</a></h4>
 
-<p>I have been informed that my method/benchmark (but using another customized Resnet) has been requested by people from LRZ for the SuperMUC-NG phase 2 benchmark/evaluation.</p>
 
 <p>
-I am actually rather curious about the deeper reason why the OpenMP solution somehow is significant lower than the theoretical max, or it is just a phenomenon that only happen to CNN based architecture, as mentioned previously, another customized architecture also exhibits a similar plot. During this experiments, I also tried with C++ version: LibTorch to exam the single core performance, which runs roughly at the same speed as PyTorch, I would say it is because the backbone of PyTorch is still C++ program. If I have time, I may also write another article for improving the single core performance.
+I am actually rather curious about the deeper reason why the Pytorch with OpenMP somehow is significant slower than the theoretical max, or it is just a phenomenon that only happen to CNN based architecture, as another CNN architecture used in our project also exhibits a similar behavior. During this experiments, I also translate the code into with C++ using the LibTorch to exam the single core performance, which runs roughly at the same speed as Python version, I guess maybe the C++ and Python are actually using the same background,  if I have time, I may also write another article for exploring the methods to imporve single core performance for CPU node.
 </p>
 
 
 <p id='courtesy'>
-	Researcher / content creator: Cong Luo.
+	Researcher / content creator: Cong Luo &#128516; @ TUM.
 </p>
 </body>
 </html>
