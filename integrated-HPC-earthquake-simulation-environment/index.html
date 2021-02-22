@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<!-- copy right: Cong Luo -->
+<html>
+<head>
+	<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
+	<script>
+	</script>
+	<style>
+
+	.sidenav {
+  width: 110px;
+  position: fixed;
+  z-index: 1;
+  top: 30px;
+  left: 10px;
+  background: white;
+  overflow-x: hidden;
+  padding: 8px 0;
+	font-size: 11px;
+}
+
+.sidenav a {
+  padding: 3px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 11px;
+  color: #aaaaaa;
+  display: block;
+	align: left;
+}
+
+.sidenav a:hover {
+  color: ##3176FE;
+}
+
+
+
+	body {
+		line-height: 1.5;
+		padding: 20px;
+		box-shadow: 5px 5px 5px #aaaaaa;
+	  text-align: justify;
+	  color: #555555;
+	  font-family: Arial, Helvetica, sans-serif;
+		font-size:16px;
+	  max-width: 650px;
+	  min-width: 650px;
+	  width: auto;
+	  width:650px;
+	  margin: auto;
+	  bottom: 10px;
+	  background-repeat: no-repeat; /* Do not repeat the image */
+	  background-image: url('img/bg.jpg');
+	  background-size: cover;
+	  top: 40px;
+	  z-index: -1;
+	  display: block;
+	}
+
+	.color1 {
+	  color: #99ccff;
+	  font-weight: bold;
+
+	}
+	.color2 {
+	  color: #E4974E;
+	}
+
+	a {
+	  color: ##377ED9;
+	}
+
+	a:hover {
+	  color: #222222;
+	}
+
+	code{
+		background-color: #DAE7F8;
+	}
+
+
+	img{
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.article{
+	  margin: auto;
+	  max-width: 500px;
+	  margin-top:10px;
+	  font-weight: bold;
+	  font-size: 14px;
+	  pad: 3px;
+	}
+
+	.article:hover {
+	  color: #333333;
+	  background-color: #eeeeee;
+	  transition-delay: 0.02s;
+	}
+
+	.list {
+	  margin: auto;
+	  max-width: 500px;
+	  margin-top:10px;
+	}
+
+	.container{
+	  margin-top:120px;
+	}
+
+	.prettyprint{
+		font-size: 13px;
+		background-color: #EFF4FF;
+	}
+
+	.cap{
+		max-width: 500px;
+		width: 500px;
+		font-size: 15px;
+		font-style: italic;
+		margin: auto;
+	}
+
+	#titlebar{
+	  opacity: 1.0;
+	  z-index: 10;
+	  cursor: grab;
+	  background-image: linear-gradient(#e5e4e5, #cecece);
+		max-width: 600px;
+	  min-width: 600px;
+	  height: 22px;
+	  border-radius: 0px;
+	}
+
+
+
+	#frame{
+	  position: absolute;
+	  margin-top: 2px;
+	  background-color: #000000;
+	  opacity: 0.8;
+	  max-width: 600px;
+	  min-width: 600px;
+	  height: 350px;
+	  border-radius: 5px;
+	  z-index: 9;
+	  font-size: 12px;
+	  text-align: left;
+	}
+
+	#courtesy{
+	  font-size: 12px;
+		font-style: italic;
+	}
+
+	</style>
+</head>
+<body>
+<!--
+	<div class="sidenav">
+	  <a href="#bg">Background</a>
+	  <a href="#md">Method / result</a>
+	  <a href="#th">Some thoughts</a>
+	</div> -->
+
+
+
+<h1>
+	An Integrated Web and HPC based Earthquake Simulation Environment
+</h1>
+
+<p>
+Performing numerical simulation of 3D seismic wave propagation is important for earthquake studies. However, developing the numerical schemes for solving the partial differential equations is not the only difficult part. Before and after submitting a job at HPC to run the nuemrcical code, the data acquisition, preprocessing, mesh generation, visualization etc, relies on various tools and operations, which potentially formed an invisible obstacle for the researchers to carry out the simulation for studying realistic earthquakes. There is a EU funded research project worked by 3-4 universities aims at solving this issue (there might be another similar but earlier project from Caltech), but to my best knowdledge, it seems a lot user degrees of freedom (DOF) are compromised, such as the study areas are limited. In this blog, I would like to briefly introduce an integrated web and HPC based 3D seismic wave propagation simulation environment that I design and implemented. The overall architecture is illustrated below.
+</p>
+
+
+
+<img src="img/architecture.png" width="450">
+<div class='cap'>
+Overall architecture of the simulation environment. The user only need a OpenGL ES 2.0 capable GPU and a modern web browser.
+</div>
+
+
+
+<img src="img/cpu-benchmark.png" width="400">
+
+
+<img src="img/user_taskflow.png" width="500">
+
+<img src="img/frontend.png" width="520">
+
+
+<img src="img/visualization.png" width="500">
+
+<p>
+
+</p>
+<!--
+<p>
+ Just in case you are interested, the sicientific result of this computation is the classification map for a remote area near Tokyo.
+</p>
+
+<img src="img/tk_demo.png" width="350"> -->
+
+<h4><a name='th'>Some thoughts</a></h4>
+
+
+<p>
+
+</p>
+
+
+
+
+<p id='courtesy'>
+	Researcher / content creator: Cong Luo. Copyright reserved.
+</p>
+</body>
+</html>
