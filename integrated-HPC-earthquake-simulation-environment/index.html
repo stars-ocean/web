@@ -191,23 +191,25 @@ For realtime visualization for some steps in both  preprocessing and postprocess
 
 <img src="img/frontend.png" width="520">
 <div class='cap'>
-The web-based user interface. User can select the study areas at global scale, generate the mesh, customize the simulation parameter, submitting the HPC job, retrieve the results directly via a supported browser (The high resolution velocity model is not provided, as usually it is acquired from field study. If the user have already acquired it for the study area, it can be uploaded for  automated  processing).
+The web-based user interface. User can select the study areas at global scale, generate the mesh, customize the simulation parameter, submitting the HPC job, retrieve the results directly via a supported browser (high resolution velocity model is not integrated, as usually it is acquired from field study, but can be uploaded for automated  processing).
 </div>
 
 
 <p>
-Most of the simulation codes in geophysics community would require multiple computing nodes (the magnitude order is 1E1 to 1E2 even 1E3). However, for preprocessing and postprocessing, the computational cost is not very high but would require fast processing  for realtime user reaction (the HPC queueing time hence should be avoided), so except the HPC, there are also few nodes for realtime computation. The complete architecture might be too complicated, which cannot be covered in this blog. Once the simulation is finished, the user can download the simulation results, if needed, the 3D results can also be interactively visualized as illustrated below.
+Most of the simulation codes in geophysics community would require multiple computing nodes (with the magnitude order up to 1E3). However, for preprocessing and postprocessing, the computational cost is not very high but would require fast processing  for realtime user reaction (the HPC queueing time hence should be avoided), how to implement this in a complete architecture might be too complicated, also beyonds the scope of this blog.</p>
+<p>
+From the user perspective, once the simulation is finished, they can download the simulation results, or if needed, the 3D results can also be interactively visualized as illustrated below.
 </p>
 
 <img src="img/visualization.png" width="500">
 <div class='cap'>
-Interactive visualization of the 3D velocity field of the simulated seismic event at different time points. One philosophy for developing this visualization tool is: only extracting the useful areas (i.e., the areas where velocity is not zero) for visualization, hence the complete 3D wavefield can be directly visualized, no more slicing is needed.
+Interactive visualization of the 3D velocity field of the simulated seismic event at different time points. One philosophy for developing this visualization tool is: only extracting the useful areas (i.e., the areas where velocity is not zero) for visualization, hence the complete 3D wavefield can be directly visualized, no more traditional slicing is needed.
 </div>
 
 
 <h4><a name='th'>Some thoughts</a></h4>
 <p>
-It seems integrated web-based simulation environment (e-science) development is a popular filed couple of years ago. I know there is an EU funded research project worked by 3-4 universities aims at delivering a similar solution (there might be another similar but earlier project from Caltech).  Science and technology keep evolving,  AI is already one of the most popular tools for many research disciplines, I still hope more e-science projects like this can emerge to facilitate the development of numeircal simulation. Both statistics (AI) and physics are important. 
+It seems integrated web-based simulation environment (e-science) development is a popular filed couple of years ago. I know there is an EU funded research project worked by 3-4 universities aims at delivering a similar solution (there might be another close but earlier project from Caltech).  Science and technology keep evolving, deep learning is already one of the most popular tools for many research disciplines, I still hope more e-science projects like this can emerge to facilitate the development of numeircal simulation. Both statistics (deep learning) and physics are important.
 </p>
 
 
