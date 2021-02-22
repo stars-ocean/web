@@ -172,43 +172,42 @@
 </h1>
 
 <p>
-Performing numerical simulation of 3D seismic wave propagation is important for earthquake studies. However, developing the numerical schemes for solving the partial differential equations is not the only difficult part. Before and after submitting a job at HPC to run the nuemrcical code, the data acquisition, preprocessing, mesh generation, visualization etc, relies on various tools and operations, which potentially formed an invisible obstacle for the researchers to carry out the simulation for studying realistic earthquakes. There is a EU funded research project worked by 3-4 universities aims at solving this issue (there might be another similar but earlier project from Caltech), but to my best knowdledge, it seems a lot user degrees of freedom (DOF) are compromised, such as the study areas are limited. In this blog, I would like to briefly introduce an integrated web and HPC based 3D seismic wave propagation simulation environment that I design and implemented. The overall architecture is illustrated below.
+ Numerical simulation of 3D seismic wave propagation is an important tool for earthquake studies. However, developing the numerical schemes for solving the partial differential equations is not the only difficult part. The data acquisition, preprocessing, mesh generation, visualization etc, relies on various tools and professional knowledges, which potentially formed an invisible obstacle for the researchers to carry out the simulation for studying realistic earthquakes. In this blog, I would like to briefly introduce an integrated web and HPC based 3D seismic wave propagation simulation environment that I design and implemented. </p>
+
+
+<p>
+ By properly developing an automated workflow pipeline on the server side (which is another topic maybe I will cover in another blog),  the user taskflow is greatly simplified as illustrated below.
 </p>
 
-
-
-<img src="img/architecture.png" width="450">
+<img src="img/user_taskflow.png" width="400">
 <div class='cap'>
-Overall architecture of the simulation environment. The user only need a OpenGL ES 2.0 capable GPU and a modern web browser.
+The user taskflow, which is already greatly simplified compared with conventional one. The user input will be standardized and used for building professional study area model.
 </div>
 
 
-
-<img src="img/cpu-benchmark.png" width="400">
-
-
-<img src="img/user_taskflow.png" width="500">
+<p>
+For realtime visualization for some steps in both  preprocessing and postprocessing (WYSIWYW), an OpenGL ES 2.0 capable GPU and a modern web browser support WebGL are required for the user side. The figure below illustrates the user interface of this environment.
+</p>
 
 <img src="img/frontend.png" width="520">
+<div class='cap'>
+The web-based user interface. User can select the study areas at global scale, generate the mesh, customize the simulation parameter, submitting the HPC job, retrieve the results directly via a supported browser (The high resolution velocity model is not provided, as usually it is acquired from field study. If the user have already acquired it for the study area, it can be uploaded for  automated  processing).
+</div>
 
+
+<p>
+Most of the simulation codes in geophysics community would require multiple computing nodes (the magnitude order is 1E1 to 1E2 even 1E3). However, for preprocessing and postprocessing, the computational cost is not very high but would require fast processing  for realtime user reaction (the HPC queueing time hence should be avoided), so except the HPC, there are also few nodes for realtime computation. The complete architecture might be too complicated, which cannot be covered in this blog. Once the simulation is finished, the user can download the simulation results, if needed, the 3D results can also be interactively visualized as illustrated below.
+</p>
 
 <img src="img/visualization.png" width="500">
+<div class='cap'>
+Interactive visualization of the 3D velocity field of the simulated seismic event at different time points. One philosophy for developing this visualization tool is: only extracting the useful areas (i.e., the areas where velocity is not zero) for visualization, hence the complete 3D wavefield can be directly visualized, no more slicing is needed.
+</div>
 
-<p>
-
-</p>
-<!--
-<p>
- Just in case you are interested, the sicientific result of this computation is the classification map for a remote area near Tokyo.
-</p>
-
-<img src="img/tk_demo.png" width="350"> -->
 
 <h4><a name='th'>Some thoughts</a></h4>
-
-
 <p>
-
+It seems integrated web-based simulation environment (e-science) development is a popular filed couple of years ago. I know there is an EU funded research project worked by 3-4 universities aims at delivering a similar solution (there might be another similar but earlier project from Caltech).  Science and technology keep evolving,  AI is already one of the most popular tools for many research disciplines, I still hope more e-science projects like this can emerge to facilitate the development of numeircal simulation. Both statistics (AI) and physics are important. 
 </p>
 
 
