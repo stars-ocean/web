@@ -247,11 +247,11 @@ def model_IO_cpu_pin(cood, pubobj, model, affinity):
 if __name__ == '__main__':
     allprocs = []
     for cpu in range(48):
-    affi = dict(affinity=[cpu])
-    p = mp.Process(target=model_IO_cpu_pin, args= (coodcpu[cpu], \
-        zeros_lcz_map_sm, model, ), kwargs=affi)
-    p.start()
-    allprocs.append(p)
+        affi = dict(affinity=[cpu])
+        p = mp.Process(target=model_IO_cpu_pin, args= (coodcpu[cpu], \
+            zeros_lcz_map_sm, model, ), kwargs=affi)
+        p.start()
+        allprocs.append(p)
     for p in allprocs:
         p.join()
 </pre>
